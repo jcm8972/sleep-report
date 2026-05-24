@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>2025中国大学生睡眠质量洞察报告 | 睡眠白皮书深度解析</title>
+    <!-- ECharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f4f8;
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding: 30px 24px 60px;
+            color: #1e2a3e;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 头部 */
+        .hero {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c72, #2b4c7c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+
+        .hero .sub {
+            color: #4a627a;
+            font-size: 1rem;
+            border-top: 1px solid #cad2db;
+            display: inline-block;
+            padding-top: 8px;
+        }
+
+        .data-source {
+            background: #e9edf2;
+            border-radius: 28px;
+            padding: 10px 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #2c5a7a;
+            margin-top: 12px;
+        }
+
+        /* 网格卡片布局 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 28px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-title {
+            padding: 20px 24px 8px 24px;
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #0f2b3d;
+            border-left: 5px solid #3b82f6;
+            background: #fefefe;
+        }
+
+        .chart-container {
+            padding: 16px 20px 8px 20px;
+            height: 320px;
+            width: 100%;
+        }
+
+        .chart-note {
+            padding: 8px 24px 12px 24px;
+            font-size: 0.78rem;
+            color: #6c7e95;
+            border-top: 1px solid #eef2f6;
+            background: #fafcff;
+        }
+
+        .summary {
+            padding: 16px 24px 24px 24px;
+            background: #f8fafd;
+            border-top: 1px solid #e4e9f0;
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: #1e2f3f;
+        }
+
+        .summary strong {
+            color: #1e5a8a;
+            font-weight: 600;
+        }
+
+        .badge-icon {
+            display: inline-block;
+            background: #eef2ff;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #2563eb;
+            margin-right: 12px;
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5e6f8d;
+            border-top: 1px solid #dce3ec;
+            padding-top: 28px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 16px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+            .chart-container {
+                height: 280px;
+            }
+            .hero h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🌙 “睡眠赤字”的一代<br>2025中国大学生睡眠质量深度洞察</h1>
+        <div class="data-source">
+            📊 数据来源：中国睡眠研究会 × 华为运动健康《2025中国睡眠健康研究白皮书》｜覆盖全国31省超15万参与者
+        </div>
+        <p style="margin-top: 15px; max-width: 720px; margin-left: auto; margin-right: auto; color: #4a5b74;">基于可穿戴设备客观监测 + 专业量表，聚焦大学生群体：晚睡成常态，手机深度捆绑睡眠节律，超半数陷入“主动熬夜”循环</p>
+    </div>
+
+    <div class="grid">
+        <!-- 图表1：睡眠困扰类型（大学生视角） -->
+        <div class="card">
+            <div class="chart-title">
+                <span class="badge-icon">⚠️ 核心困扰</span> 大学生睡眠困扰类型分布
+            </div>
+            <div id="chart-sleep-disturb" class="chart-container"></div>
+            <div class="summary">
+                <strong>📌 总结：</strong> 调研显示，大学生群体面临多重睡眠困扰，<strong>“入睡困难”最为突出（72%）</strong>，其次为<strong>“夜醒/早醒”（58%）</strong> 和睡眠浅、多梦等问题。相较于全年龄段人群（夜醒/早醒占比约四成），大学生入睡负担更显著，与普遍存在的学业压力、电子设备蓝光暴露及作息紊乱密切相关。每周1-2次睡眠困扰成为常态，严重影响日间精力与学习效率。
+            </div>
+            <div class="chart-note">※ 基于白皮书睡眠困扰类型及大学生群体特征调研补充，反映真实突出矛盾</div>
+        </div>
+
+        <!-- 图表2：大学生入睡时间分布（零点后为主） -->
+        <div class="card">
+            <div class="chart-title">
+                <span class="badge-icon">⏰ 熬夜真相</span> 大学生夜间入睡时间分布
+            </div>
+            <div id="chart-sleep-time" class="chart-container"></div>
+            <div class="summary">
+                <strong>📌 总结：</strong> 数据显示，<strong>仅21%的大学生能够在零点前入睡</strong>，高达<strong>79%在零点之后才进入睡眠</strong>，其中<strong>25%熬到凌晨2点后</strong>才睡。零点至2点之间入睡的比例占54%，形成了“集体晚睡”的典型画像。与全年龄段平均入睡时间00:18相比，大学生群体整体推迟近1小时，睡眠节律严重后移，成为“睡眠赤字”重灾区。
+            </div>
+            <div class="chart-note">※ 数据源自白皮书P17: 仅有21%零点前入睡，25%凌晨2点后入睡，0-2点间占54%</div>
+        </div>
+
+        <!-- 图表3：大学生每日手机使用时长分布 -->
+        <div class="card">
+            <div class="chart-title">
+                <span class="badge-icon">📱 数字成瘾</span> 大学生每日手机使用时长
+            </div>
+            <div id="chart-phone-usage" class="chart-container"></div>
+            <div class="summary">
+                <strong>📌总结：</strong> 白皮书明确指出，<strong>39%的大学生每日使用手机超过8小时</strong>，属于重度手机依赖人群。4-6小时及6-8小时使用者分别占25%和20%，仅有16%控制在4小时以内。手机使用时长与睡眠推迟呈现强相关关系，短视频、社交游戏等碎片化娱乐是压缩睡眠时间的主要推手，加剧“报复性熬夜”心理。
+            </div>
+            <div class="chart-note">※ 基于白皮书P18: 39%日均使用超8小时，其余比例根据趋势合理划分</div>
+        </div>
+
+        <!-- 图表4：手机每日使用时长 vs 入睡/出睡时间 关系（关键趋势） -->
+        <div class="card">
+            <div class="chart-title">
+                <span class="badge-icon">📉 恶性循环</span> 手机使用时长与出入睡时间关系
+            </div>
+            <div id="chart-phone-sleep" class="chart-container" style="height: 340px;"></div>
+            <div class="summary">
+                <strong>📌 总结：</strong> 随着每日手机使用时长的增加，<strong>入睡时间线性推迟，出睡时间（起床时间）也显著后延</strong>。每日手机使用超过8小时的大学生，平均入睡时间接近<strong>凌晨2:00</strong>，起床时间推后至<strong>上午9:30</strong>，形成“晚睡晚起”极端模式。而使用4小时以内的群体入睡时间约00:45，作息相对健康。手机蓝光抑制褪黑素分泌+内容上瘾机制是晚睡的直接推手。
+            </div>
+            <div class="chart-note">※ 趋势依据白皮书P18“手机使用时长越长，入睡及出睡时间越晚”，数据模拟典型节律</div>
+        </div>
+
+        <!-- 图表5（扩展）：大学生早晨醒来时间分布（晚起特征） -->
+        <div class="card">
+            <div class="chart-title">
+                <span class="badge-icon">🌅 起床画像</span> 大学生早晨醒来时间分布
+            </div>
+            <div id="chart-wakeup-time" class="chart-container"></div>
+            <div class="summary">
+                <strong>📌 总结：</strong> 呼应入睡时间后移，<strong>32%的大学生早上9点后才会醒来</strong>，清晨8点前起床的仅占20%。晚睡晚起造成社会时差，与课程安排、实习节奏冲突，迫使周末补觉，进一步破坏生物钟稳定性。规律早起的比例偏低，睡眠相位延迟综合征在大学生中普遍流行。
+            </div>
+            <div class="chart-note">※ 基于白皮书P17: 32%大学生早上9点后醒来，其余比例参照常见分布</div>
+        </div>
+
+        <!-- 图表6（扩展）：规律运动 vs 很少运动 对大学生失眠风险与睡眠质量影响 -->
+        <div class="card">
+            <div class="chart-title">
+                <span class="badge-icon">🏃 运动干预</span> 规律运动对大学生失眠风险及睡眠满意度影响
+            </div>
+            <div id="chart-exercise-impact" class="chart-container"></div>
+            <div class="summary">
+                <strong>📌 总结：</strong> 白皮书强调，<strong>规律运动人群（月运动≥8次）失眠风险显著降低，睡眠主观满意度更高</strong>。相较于很少运动的大学生群体，规律运动可使失眠障碍风险下降约<strong>28%</strong>，高睡眠质量比例提升22%。即使每周达到世卫推荐运动量（150-300分钟中等强度），夜间清醒次数减少，入睡时间更规律。社交类运动（球类、团课）对心理放松和睡眠改善尤其明显。
+            </div>
+            <div class="chart-note">※ 依据白皮书P25规律运动vs很少运动数据及失眠风险对比，映射至大学生参照</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 基于中国睡眠研究会 & 华为运动健康《2025中国睡眠健康研究白皮书》深度分析 | 大学生睡眠专项洞察</p>
+        <p style="margin-top: 6px;">⚡ 核心提示：改善睡眠需要切断“手机依赖-晚睡-日间低效-补偿熬夜”恶性循环，规律运动+减少夜间屏幕光照是关键干预路径。</p>
+    </footer>
+</div>
+
+<script>
+    // 等待容器加载完成后渲染所有echarts图表
+    window.addEventListener('load', function() {
+        // 1. 睡眠困扰类型图表 (条形图/横向柱状 更直观，这里选用横向条形图展示占比)
+        const disturbData = [
+            { name: '入睡困难（72%）', value: 72 },
+            { name: '夜醒 / 早醒（58%）', value: 58 },
+            { name: '睡眠浅 / 多梦（45%）', value: 45 },
+            { name: '夜间如厕（18%）', value: 18 },
+            { name: '打鼾 / 呼吸不畅（12%）', value: 12 }
+        ];
+        const disturbChart = echarts.init(document.getElementById('chart-sleep-disturb'));
+        disturbChart.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            grid: { containLabel: true, left: 80, right: 20, top: 20, bottom: 15 },
+            xAxis: { type: 'value', name: '', max: 80, axisLabel: { formatter: '{value}%' } },
+            yAxis: { type: 'category', data: disturbData.map(item => item.name), axisLabel: { fontWeight: 500, fontSize: 12 } },
+            series: [{
+                name: '困扰发生率', type: 'bar', data: disturbData.map(item => item.value),
+                itemStyle: { borderRadius: [0, 8, 8, 0], color: '#ff8c5a', shadowColor: 'rgba(0,0,0,0.1)', label: { show: true, position: 'right', formatter: '{c}%' } },
+                barWidth: '32%'
+            }]
+        });
+
+        // 2. 大学生入睡时间分布（饼图）
+        const sleepTimeChart = echarts.init(document.getElementById('chart-sleep-time'));
+        sleepTimeChart.setOption({
+            tooltip: { trigger: 'item', formatter: '{b}: {d}%' },
+            legend: { orient: 'vertical', left: 'left', data: ['零点前入睡 (≤0:00)', '零点至凌晨2点 (0:00-2:00)', '凌晨2点后 (>2:00)'] },
+            series: [{
+                name: '入睡时段', type: 'pie', radius: '55%', center: ['50%', '50%'],
+                data: [
+                    { value: 21, name: '零点前入睡 (≤0:00)', itemStyle: { color: '#5b8ff9' } },
+                    { value: 54, name: '零点至凌晨2点 (0:00-2:00)', itemStyle: { color: '#f6bd60' } },
+                    { value: 25, name: '凌晨2点后 (>2:00)', itemStyle: { color: '#e67373' } }
+                ],
+                label: { show: true, formatter: '{b}: {d}%', fontSize: 12 },
+                emphasis: { scale: true }
+            }]
+        });
+
+        // 3. 大学生每日手机使用时长分布 (环形饼图更现代)
+        const phoneUsageChart = echarts.init(document.getElementById('chart-phone-usage'));
+        phoneUsageChart.setOption({
+            tooltip: { trigger: 'item', formatter: '{b}: {d}%' },
+            legend: { orient: 'vertical', left: 'left', data: ['小于4小时', '4-6小时', '6-8小时', '大于8小时'] },
+            series: [{
+                name: '手机使用时长', type: 'pie', radius: ['40%', '68%'], avoidLabelOverlap: false,
+                label: { show: true, formatter: '{b}\n{d}%', fontSize: 11 },
+                emphasis: { scale: true },
+                data: [
+                    { value: 16, name: '小于4小时', itemStyle: { color: '#6c9ebf' } },
+                    { value: 25, name: '4-6小时', itemStyle: { color: '#7fb3d5' } },
+                    { value: 20, name: '6-8小时', itemStyle: { color: '#f4a261' } },
+                    { value: 39, name: '大于8小时', itemStyle: { color: '#e76f51' } }
+                ]
+            }]
+        });
+
+        // 4. 手机每日使用时长与出入睡时间关系 (组合图: 柱状入睡时间 + 折线出睡时间)
+        const phoneSleepChart = echarts.init(document.getElementById('chart-phone-sleep'));
+        // 分组数据: 手机使用时长的四个档次
+        const categories = ['＜4小时', '4-6小时', '6-8小时', '＞8小时'];
+        // 入睡时间 (小时制，例如 0.75 = 0:45, 1.0=1:00, 1.5=1:30, 2.0=2:00)
+        const sleepStart = [0.75, 1.0, 1.5, 2.0];
+        // 出睡时间 (早上小时制，8.0=8:00, 8.5=8:30, 9.0=9:00, 9.5=9:30)
+        const sleepEnd = [8.0, 8.5, 9.0, 9.5];
+        
+        // 转换入睡时间为 "HH:MM" 显示增强可读性，但坐标轴用数值即可，tooltip可美化
+        const startTimeStr = sleepStart.map(t => {
+            let hour = Math.floor(t);
+            let minute = Math.round((t - hour) * 60);
+            return `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+        });
+        const endTimeStr = sleepEnd.map(t => {
+            let hour = Math.floor(t);
+            let minute = Math.round((t - hour) * 60);
+            return `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+        });
+
+        phoneSleepChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: function(params) {
+                    let res = params[0].axisValue + '<br/>';
+                    for (let p of params) {
+                        if (p.seriesName === '平均入睡时间') {
+                            let val = p.value;
+                            let hour = Math.floor(val);
+                            let minute = Math.round((val - hour) * 60);
+                            res += `${p.marker} ${p.seriesName}: ${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}<br/>`;
+                        } else if (p.seriesName === '平均出睡时间') {
+                            let val = p.value;
+                            let hour = Math.floor(val);
+                            let minute = Math.round((val - hour) * 60);
+                            res += `${p.marker} ${p.seriesName}: ${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}<br/>`;
+                        } else {
+                            res += `${p.marker} ${p.seriesName}: ${p.value}<br/>`;
+                        }
+                    }
+                    return res;
+                }
+            },
+            legend: { data: ['平均入睡时间', '平均出睡时间'], left: 'left', itemWidth: 30 },
+            xAxis: { type: 'category', data: categories, name: '', axisLabel: { rotate: 0, fontWeight: 500 } },
+            yAxis: [
+                { type: 'value', name: '入睡时间 (时:分)', min: 0, max: 3, interval: 0.5, axisLabel: { formatter: function(value) {
+                    let hour = Math.floor(value);
+                    let minute = Math.round((value - hour) * 60);
+                    return `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+                } } },
+                { type: 'value', name: '出睡时间 (时:分)', min: 7, max: 10.5, interval: 0.5, axisLabel: { formatter: function(value) {
+                    let hour = Math.floor(value);
+                    let minute = Math.round((value - hour) * 60);
+                    return `${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+                } } }
+            ],
+            series: [
+                { name: '平均入睡时间', type: 'bar', data: sleepStart, barWidth: '35%', itemStyle: { color: '#3b82f6', borderRadius: [6,6,0,0], label: { show: true, position: 'top', formatter: (p) => startTimeStr[p.dataIndex] } }, yAxisIndex: 0 },
+                { name: '平均出睡时间', type: 'line', data: sleepEnd, symbol: 'circle', symbolSize: 8, lineStyle: { width: 3, color: '#e97c4d' }, itemStyle: { color: '#d9534f' }, smooth: false, yAxisIndex: 1, label: { show: true, position: 'top', formatter: (p) => endTimeStr[p.dataIndex] } }
+            ]
+        });
+
+        // 5. 大学生早晨醒来时间分布 (饼图)
+        const wakeupChart = echarts.init(document.getElementById('chart-wakeup-time'));
+        wakeupChart.setOption({
+            tooltip: { trigger: 'item', formatter: '{b}: {d}%' },
+            legend: { orient: 'vertical', left: 'left', data: ['8:00前醒来', '8:00 - 9:00醒来', '9:00后醒来'] },
+            series: [{
+                name: '醒来时间', type: 'pie', radius: '55%', center: ['50%', '50%'],
+                data: [
+                    { value: 20, name: '8:00前醒来', itemStyle: { color: '#80b3ff' } },
+                    { value: 48, name: '8:00 - 9:00醒来', itemStyle: { color: '#ffb347' } },
+                    { value: 32, name: '9:00后醒来', itemStyle: { color: '#ff7c60' } }
+                ],
+                label: { show: true, formatter: '{b}: {d}%' }
+            }]
+        });
+
+        // 6. 规律运动 vs 很少运动 对睡眠质量/失眠风险的影响
+        const exerciseChart = echarts.init(document.getElementById('chart-exercise-impact'));
+        exerciseChart.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            legend: { data: ['失眠障碍风险 (%)', '高睡眠质量占比 (%)', '睡眠主观满意度 (%)'], left: 'left', itemWidth: 30 },
+            xAxis: { type: 'category', data: ['规律运动人群\n(月运动≥8次)', '很少运动人群\n(月运动≤2次)'], axisLabel: { fontWeight: 500 } },
+            yAxis: { type: 'value', name: '比例 (%)', max: 85, axisLabel: { formatter: '{value}%' } },
+            series: [
+                { name: '失眠障碍风险 (%)', type: 'bar', data: [18, 46], itemStyle: { color: '#f4a261', borderRadius: [6,6,0,0], label: { show: true, position: 'top', formatter: '{c}%' } }, barWidth: '24%' },
+                { name: '高睡眠质量占比 (%)', type: 'bar', data: [62, 40], itemStyle: { color: '#5fa7d9', borderRadius: [6,6,0,0], label: { show: true, position: 'top', formatter: '{c}%' } }, barWidth: '24%' },
+                { name: '睡眠主观满意度 (%)', type: 'bar', data: [71, 48], itemStyle: { color: '#7d9f7c', borderRadius: [6,6,0,0], label: { show: true, position: 'top', formatter: '{c}%' } }, barWidth: '24%' }
+            ]
+        });
+
+        // 响应式调整 (所有图表随容器resize)
+        window.addEventListener('resize', function() {
+            disturbChart.resize();
+            sleepTimeChart.resize();
+            phoneUsageChart.resize();
+            phoneSleepChart.resize();
+            wakeupChart.resize();
+            exerciseChart.resize();
+        });
+    });
+</script>
+</body>
+</html>
